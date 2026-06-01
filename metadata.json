@@ -1,0 +1,8 @@
+{
+  "name": "Litha Life Sciences",
+  "description": "Premium pharmaceutical manufacturing company website for Litha Life Sciences Pvt Ltd.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
