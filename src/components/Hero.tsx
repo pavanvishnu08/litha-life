@@ -1,15 +1,48 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Search, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { findBestProductMatch, loadProducts } from '../services/products';
+import { useDeferredBackground } from '../lib/useDeferredBackground';
 
 export function Hero() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const navigate = useNavigate();
+
+  async function handleHeroSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const query = searchQuery.trim();
+    if (!query) return;
+
+    setIsSearching(true);
+    const result = await loadProducts();
+    const exactMatch = findBestProductMatch(result.data, query);
+    setIsSearching(false);
+
+    if (exactMatch) {
+      navigate(`/catalog/${exactMatch.id}`, {
+        state: {
+          catalogPath: `/catalog?search=${encodeURIComponent(query)}`,
+        },
+      });
+      setSearchQuery('');
+      return;
+    }
+
+    navigate(`/catalog?search=${encodeURIComponent(query)}`);
+  }
+
+  const backgroundImage = useDeferredBackground('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop');
+
   return (
     <section className="relative pt-20 pb-32 overflow-hidden bg-blue-900">
       {/* Background Image & Overlay */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-50 mix-blend-overlay"
         style={{ 
-          backgroundImage: 'url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2070&auto=format&fit=crop")',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop")',
         }}
       ></div>
       <div className="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-blue-900/80 to-white z-0"></div>
@@ -40,22 +73,30 @@ export function Hero() {
         </motion.p>
 
         {/* Big Search Bar */}
-        <motion.div 
+        <motion.form
+          onSubmit={handleHeroSearchSubmit}
           className="w-full max-w-2xl bg-white rounded-xl p-1.5 flex items-center shadow-2xl mb-12 focus-within:ring-4 focus-within:ring-blue-500/20 transition-all border border-slate-200"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <Search className="w-5 h-5 text-slate-400 ml-4 mr-2 hidden sm:block shrink-0" />
-          <input 
-            type="text" 
-            placeholder="Search by compound name, CAS number, or category..." 
-            className="flex-1 bg-transparent border-none outline-none px-4 py-3 sm:py-3.5 text-slate-800 text-sm sm:text-base placeholder:text-slate-400"
+          <input
+            type="text"
+            placeholder="Search by compound name, CAS number, or category..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            disabled={isSearching}
+            className="flex-1 bg-transparent border-none outline-none px-4 py-3 sm:py-3.5 text-slate-800 text-sm sm:text-base placeholder:text-slate-400 disabled:opacity-60"
           />
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 sm:py-3.5 px-6 sm:px-8 rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base shadow-md">
-            Search
+          <button
+            type="submit"
+            disabled={isSearching}
+            className="bg-blue-600 hover:bg-blue-700 disabled:hover:bg-blue-600 disabled:opacity-70 text-white font-bold py-3 sm:py-3.5 px-6 sm:px-8 rounded-lg transition-colors whitespace-nowrap text-sm sm:text-base shadow-md"
+          >
+            {isSearching ? 'Searching...' : 'Search'}
           </button>
-        </motion.div>
+        </motion.form>
         
         {/* Buttons */}
         <motion.div 

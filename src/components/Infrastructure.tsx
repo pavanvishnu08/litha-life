@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { Factory, Settings, Leaf, Globe, RefreshCcw, Microscope, Lightbulb, Users, Laptop, TestTube, Handshake, FileCheck, Rocket, Beaker } from 'lucide-react';
+import { useDeferredBackground } from '../lib/useDeferredBackground';
 
 export function Infrastructure() {
   const manufacturingFeatures = [
@@ -93,18 +94,20 @@ export function Infrastructure() {
     "Other Reactions"
   ];
 
+  const backgroundImage = useDeferredBackground('https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=1200&auto=format&fit=crop');
+
   return (
     <div className="flex flex-col bg-slate-50">
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-blue-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-cover bg-center opacity-20 mix-blend-luminosity" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=2070&auto=format&fit=crop")' }}></div>
+        <div className="absolute inset-0 z-0 bg-cover bg-center opacity-20 mix-blend-luminosity" style={backgroundImage ? { backgroundImage: `url("${backgroundImage}")` } : undefined}></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl lg:text-6xl font-heading font-extrabold mb-6"
           >
-            Infrastructure
+            <span className="text-white">Infrastructure</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

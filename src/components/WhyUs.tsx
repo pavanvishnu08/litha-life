@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { ShieldCheck, Coins, Clock, Award } from 'lucide-react';
+import { useDeferredBackground } from '../lib/useDeferredBackground';
 
 export function WhyUs() {
   const features = [
@@ -13,7 +14,7 @@ export function WhyUs() {
       title: "Cost-Effective Solutions",
       description: "We understand the importance of cost-effectiveness in the pharmaceutical industry. Litha Life Sciences is dedicated to providing affordable medicines without compromising on quality. Our streamlined production processes, efficient supply chain management, and strategic sourcing practices allow us to offer competitive pricing, making essential healthcare more accessible to a global population.",
       icon: <Coins className="w-8 h-8" />,
-      image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2070&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop"
     },
     {
       title: "Timely Delivery",
@@ -25,22 +26,24 @@ export function WhyUs() {
       title: "Extensive Experience",
       description: "Litha Life Sciences boasts a team of seasoned professionals with a wealth of experience in the pharmaceutical industry. Our leadership’s extensive knowledge and expertise guide the company towards continuous growth and success. With a track record of past accomplishments, we leverage our experience to navigate challenges, innovate, and consistently enhance our product offerings.",
       icon: <Award className="w-8 h-8" />,
-      image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2000&auto=format&fit=crop"
+      image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1200&auto=format&fit=crop"
     }
   ];
+
+  const backgroundImage = useDeferredBackground('https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1200&auto=format&fit=crop');
 
   return (
     <div className="flex flex-col bg-slate-50">
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-blue-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-cover bg-center opacity-20 mix-blend-luminosity" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=2070&auto=format&fit=crop")' }}></div>
+        <div className="absolute inset-0 z-0 bg-cover bg-center opacity-20 mix-blend-luminosity" style={backgroundImage ? { backgroundImage: `url("${backgroundImage}")` } : undefined}></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl lg:text-6xl font-heading font-extrabold mb-6"
           >
-            Why Us
+            <span className="text-white">Why Us</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -81,6 +84,8 @@ export function WhyUs() {
                     <img 
                       src={feature.image} 
                       alt={feature.title} 
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                     />
                   </div>

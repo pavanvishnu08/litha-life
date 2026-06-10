@@ -1,15 +1,16 @@
 import { motion } from 'motion/react';
 import { Shield, Settings, Microscope, Globe2, DollarSign, Truck } from 'lucide-react';
+import { useDeferredBackground } from '../lib/useDeferredBackground';
 
 export function Features() {
+  const backgroundImage = useDeferredBackground('https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop');
+
   return (
     <section className="py-24 relative overflow-hidden bg-blue-100">
       {/* Background Image & Overlay */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40 mix-blend-luminosity"
-        style={{ 
-          backgroundImage: 'url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=2070&auto=format&fit=crop")',
-        }}
+        style={backgroundImage ? { backgroundImage: `url("${backgroundImage}")` } : undefined}
       ></div>
       <div className="absolute inset-0 bg-blue-900/80 z-0"></div>
 

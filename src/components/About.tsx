@@ -1,19 +1,22 @@
 import { motion } from 'motion/react';
 import { Target, Eye, ShieldCheck, Microscope, Leaf, CheckCircle2 } from 'lucide-react';
+import { useDeferredBackground } from '../lib/useDeferredBackground';
 
 export function About() {
+  const backgroundImage = useDeferredBackground('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1200&auto=format&fit=crop');
+
   return (
     <div className="flex flex-col bg-slate-50">
       {/* Hero Section */}
       <section className="pt-24 pb-16 bg-blue-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-cover bg-center opacity-10 mix-blend-luminosity" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop")' }}></div>
+        <div className="absolute inset-0 z-0 bg-cover bg-center opacity-10 mix-blend-luminosity" style={backgroundImage ? { backgroundImage: `url("${backgroundImage}")` } : undefined}></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl lg:text-6xl font-heading font-extrabold mb-6"
           >
-            About Litha Life Sciences
+            <span className="text-white">About Litha Life Sciences</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

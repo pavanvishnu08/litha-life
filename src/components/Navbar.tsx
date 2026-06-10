@@ -1,14 +1,45 @@
 import { useState, ReactNode } from 'react';
 import { Menu, X, Search, Home, Layers, User, MessageSquare, MapPin, Mail, Phone, Award, Factory } from 'lucide-react';
 import { Logo } from './Logo';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
+import { findBestProductMatch, loadProducts } from '../services/products';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path: string) => location.pathname === path;
+
+  async function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const query = searchQuery.trim();
+    if (!query) {
+      return;
+    }
+
+    setIsSearching(true);
+    const result = await loadProducts();
+    const exactMatch = findBestProductMatch(result.data, query);
+    setIsSearching(false);
+    setMobileMenuOpen(false);
+
+    if (exactMatch) {
+      navigate(`/catalog/${exactMatch.id}`, {
+        state: {
+          catalogPath: `/catalog?search=${encodeURIComponent(query)}`,
+        },
+      });
+      setSearchQuery("");
+      return;
+    }
+
+    navigate(`/catalog?search=${encodeURIComponent(query)}`);
+  }
 
   const NavItem = ({ to, icon, label }: { to: string, icon: ReactNode, label: string }) => {
     const active = isActive(to);
@@ -88,14 +119,23 @@ export function Navbar() {
             {/* Right side actions */}
             <div className="hidden lg:flex items-center gap-4 flex-1 justify-end">
               {/* Search Bar - Small */}
-              <div className="relative flex-1 max-w-[250px] xl:max-w-[300px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <form onSubmit={handleSearchSubmit} className="relative flex-1 max-w-[250px] xl:max-w-[300px]">
+                <button
+                  type="submit"
+                  aria-label="Search products"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
+                >
+                  <Search className="w-4 h-4" />
+                </button>
                 <input 
                   type="text" 
                   placeholder="Search products..." 
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  disabled={isSearching}
                   className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all"
                 />
-              </div>
+              </form>
 
               <Link to="/contact" className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2.5 rounded-lg font-bold text-[13px] whitespace-nowrap transition-colors shadow-md shadow-blue-500/20">
                 Request Quote
@@ -117,14 +157,23 @@ export function Navbar() {
         {mobileMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-slate-200 shadow-xl py-4 flex flex-col">
             <div className="px-4 pb-4 border-b border-slate-100">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <button
+                  type="submit"
+                  aria-label="Search products"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
+                >
+                  <Search className="w-4 h-4" />
+                </button>
                 <input 
                   type="text" 
                   placeholder="Search products..." 
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  disabled={isSearching}
                   className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600"
                 />
-              </div>
+              </form>
             </div>
             <div className="px-2 py-2 flex flex-col gap-1">
               <MobileNavItem to="/" icon={<Home className="w-4 h-4" />} label="Home" />

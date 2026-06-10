@@ -1,13 +1,16 @@
 import { motion } from 'motion/react';
 import { Factory, TestTube, CheckCircle2 } from 'lucide-react';
+import { useDeferredBackground } from '../lib/useDeferredBackground';
 
 export function Manufacturing() {
+  const backgroundImage = useDeferredBackground('https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=1200&auto=format&fit=crop');
+
   return (
     <section id="manufacturing" className="py-24 relative overflow-hidden bg-blue-800">
       {/* Background Graphic */}
       <div 
         className="absolute inset-0 opacity-10 bg-cover bg-center"
-        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?q=80&w=2070&auto=format&fit=crop")' }}
+        style={backgroundImage ? { backgroundImage: `url("${backgroundImage}")` } : undefined}
       />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
