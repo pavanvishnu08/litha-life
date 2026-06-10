@@ -7,7 +7,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-12 mb-12">
           <div className="lg:col-span-1">
             <div className="mb-6">
-              <img src="/footer-logo.png" alt="Litha Life Sciences logo" className="h-12 object-contain" />
+              <img src="/footer-logo.png" alt="Litha Life Sciences logo" className="h-24 w-auto object-contain" />
             </div>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
               Advancing global healthcare through pharmaceutical excellence. A reliable partner for APIs, intermediates, and custom manufacturing.
